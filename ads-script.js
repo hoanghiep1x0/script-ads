@@ -15,7 +15,7 @@ function waitForElementWithContent(callback) {
             }
         });
         if (found) {
-            clearInterval(interval);
+            //clearInterval(interval);
             callback();
         }
     }, 500);
