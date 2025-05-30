@@ -16,6 +16,7 @@ function waitForElementWithContent(callback) {
         });
         if (found) {
             //clearInterval(interval);
+            // chạy vĩnh viễn thay vì dừng lại.
             callback();
         }
     }, 500);
