@@ -1,3 +1,7 @@
+<script>
+
+
+
 const containers = document.querySelectorAll('.list-yarpp');
 let uris = [];
 
@@ -6,42 +10,75 @@ containers.forEach(container => {
   uris = uris.concat(containerLinks);
 });
 
-function show_icon(){
-  setTimeout(() => {
+function show_icon() {
   if (uris.length === 0) return;
 
-  // Tạo một icon dạng span
+  let countdown = 30;
+
+  // Tạo thẻ hiển thị đếm ngược
+  const counter = document.createElement('div');
+  Object.assign(counter.style, {
+    position: 'fixed',
+    top: '50%',
+    right: '0',
+    transform: 'translateY(-50%)',
+    zIndex: '2147483647',
+    padding: '10px',
+    backgroundColor: '#fff',
+    color: '#007bff ',
+    borderRadius: '10px',
+    fontSize: '16px',
+    fontWeight: 'bold',
+    userSelect: 'none',
+  });
+  counter.textContent = `${countdown}s`;
+
+  document.body.appendChild(counter);
+
+  // Tạo icon trước (ẩn trước)
   const icon = document.createElement('span');
-  icon.innerHTML = '🔗'; // Hoặc thay bằng <img src="..."> nếu bạn muốn icon hình ảnh
+  icon.innerHTML = '🔗';
   icon.title = 'Đi đến liên kết';
 
-  // CSS của icon
   Object.assign(icon.style, {
     position: 'fixed',
     top: '50%',
     right: '0',
     transform: 'translateY(-50%)',
-    zIndex: '2147483647', // Nằm trên mọi popup
+    zIndex: '2147483647',
     padding: '10px',
     backgroundColor: '#007bff',
     color: 'white',
     borderRadius: '10px 0 0 10px',
     cursor: 'pointer',
-    fontSize: '24px',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)'
+    fontSize: '16px',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',
+    display: 'none', // ẩn ban đầu
   });
 
-  // Sự kiện click để chuyển hướng
   icon.addEventListener('click', () => {
     const randomLink = uris[Math.floor(Math.random() * uris.length)];
     window.location.href = randomLink;
   });
 
-  // Gắn icon vào trang
   document.body.appendChild(icon);
-}, 30000); // sau 30 giây
 
+  // Bắt đầu đếm ngược từng giây
+  const intervalId = setInterval(() => {
+    countdown--;
+    if (countdown > 0) {
+      counter.textContent = `${countdown}s`;
+    } else {
+      clearInterval(intervalId);
+      counter.remove();
+      icon.style.display = 'block'; // hiện icon
+    }
+  }, 1000);
 }
+window.addEventListener('load', () => {
+    show_icon();
+})
+
 
 function isMobile() {
         const isMobileUA = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -115,10 +152,13 @@ function isMobile() {
 
     window.addEventListener('load', () => {
          if (!isMobile()) return; // Bỏ comment nếu bạn chỉ muốn áp dụng trên thiết bị di động
-        show_icon();
 
         waitForElementWithContent(() => {
             disableClicksOnElements();
         });
         observeContentChanges();
     });
+
+<script>
+
+
