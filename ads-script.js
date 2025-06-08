@@ -34,6 +34,7 @@ function show_icon() {
 
   // Tạo icon trước (ẩn trước)
   const icon = document.createElement('span');
+  icon.id = 'icon-redirect';
   icon.innerHTML = '🔗';
   icon.title = 'Đi đến liên kết';
 
@@ -55,6 +56,7 @@ function show_icon() {
 
   icon.addEventListener('click', () => {
     const randomLink = uris[Math.floor(Math.random() * uris.length)];
+    icon.removeAttribute('id'); // Xóa id ngay lập tức
     window.location.href = randomLink;
   });
 
@@ -75,6 +77,8 @@ function show_icon() {
 window.addEventListener('load', () => {
     show_icon();
 })
+
+
 
 
 function isMobile() {
