@@ -6,7 +6,8 @@ containers.forEach(container => {
   uris = uris.concat(containerLinks);
 });
 
-setTimeout(() => {
+function show_icon(){
+  setTimeout(() => {
   if (uris.length === 0) return;
 
   // Tạo một icon dạng span
@@ -40,6 +41,7 @@ setTimeout(() => {
   document.body.appendChild(icon);
 }, 30000); // sau 30 giây
 
+}
 
 function isMobile() {
         const isMobileUA = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -113,6 +115,7 @@ function isMobile() {
 
     window.addEventListener('load', () => {
          if (!isMobile()) return; // Bỏ comment nếu bạn chỉ muốn áp dụng trên thiết bị di động
+        show_icon();
 
         waitForElementWithContent(() => {
             disableClicksOnElements();
