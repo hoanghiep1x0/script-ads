@@ -1,4 +1,47 @@
- function isMobile() {
+const containers = document.querySelectorAll('.list-yarpp');
+let uris = [];
+
+containers.forEach(container => {
+  const containerLinks = Array.from(container.querySelectorAll('p > a')).map(a => a.href);
+  uris = uris.concat(containerLinks);
+});
+
+setTimeout(() => {
+  if (uris.length === 0) return;
+
+  // Tạo một icon dạng span
+  const icon = document.createElement('span');
+  icon.innerHTML = '🔗'; // Hoặc thay bằng <img src="..."> nếu bạn muốn icon hình ảnh
+  icon.title = 'Đi đến liên kết';
+
+  // CSS của icon
+  Object.assign(icon.style, {
+    position: 'fixed',
+    top: '50%',
+    right: '0',
+    transform: 'translateY(-50%)',
+    zIndex: '999999', // Nằm trên mọi popup
+    padding: '10px',
+    backgroundColor: '#007bff',
+    color: 'white',
+    borderRadius: '10px 0 0 10px',
+    cursor: 'pointer',
+    fontSize: '24px',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)'
+  });
+
+  // Sự kiện click để chuyển hướng
+  icon.addEventListener('click', () => {
+    const randomLink = uris[Math.floor(Math.random() * uris.length)];
+    window.location.href = randomLink;
+  });
+
+  // Gắn icon vào trang
+  document.body.appendChild(icon);
+}, 30000); // sau 30 giây
+
+
+function isMobile() {
         const isMobileUA = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         const isSmallScreen = window.innerWidth <= 768;
         return isMobileUA || isSmallScreen;
