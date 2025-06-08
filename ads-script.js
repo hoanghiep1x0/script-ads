@@ -1,6 +1,3 @@
-<script>
-
-
 
 const containers = document.querySelectorAll('.list-yarpp');
 let uris = [];
@@ -159,6 +156,6 @@ function isMobile() {
         observeContentChanges();
     });
 
-<script>
+
 
 
