@@ -21,7 +21,7 @@ function show_icon(){
     top: '50%',
     right: '0',
     transform: 'translateY(-50%)',
-    zIndex: '999999', // Nằm trên mọi popup
+    zIndex: '2147483647', // Nằm trên mọi popup
     padding: '10px',
     backgroundColor: '#007bff',
     color: 'white',
