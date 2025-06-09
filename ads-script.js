@@ -1,84 +1,107 @@
 
-const containers = document.querySelectorAll('.list-yarpp');
-let uris = [];
-
-containers.forEach(container => {
-  const containerLinks = Array.from(container.querySelectorAll('p > a')).map(a => a.href);
-  uris = uris.concat(containerLinks);
-});
-
-function show_icon() {
-  if (uris.length === 0) return;
-
-  let countdown = 30;
-
-  // Tạo thẻ hiển thị đếm ngược
-  const counter = document.createElement('div');
-  Object.assign(counter.style, {
-    position: 'fixed',
-    top: '50%',
-    right: '0',
-    transform: 'translateY(-50%)',
-    zIndex: '2147483647',
-    padding: '10px',
-    backgroundColor: '#fff',
-    color: '#007bff ',
-    borderRadius: '10px',
-    fontSize: '16px',
-    fontWeight: 'bold',
-    userSelect: 'none',
-  });
-  counter.textContent = `${countdown}s`;
-
-  document.body.appendChild(counter);
-
-  // Tạo icon trước (ẩn trước)
-  const icon = document.createElement('span');
-  icon.id = 'icon-redirect';
-  icon.innerHTML = '🔗';
-  icon.title = 'Đi đến liên kết';
-
-  Object.assign(icon.style, {
-    position: 'fixed',
-    top: '50%',
-    right: '0',
-    transform: 'translateY(-50%)',
-    zIndex: '2147483647',
-    padding: '10px',
-    backgroundColor: '#007bff',
-    color: 'white',
-    borderRadius: '10px 0 0 10px',
-    cursor: 'pointer',
-    fontSize: '16px',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',
-    display: 'none', // ẩn ban đầu
-  });
-
-  icon.addEventListener('click', () => {
-    const randomLink = uris[Math.floor(Math.random() * uris.length)];
-    icon.removeAttribute('id'); // Xóa id ngay lập tức
-    window.location.href = randomLink;
-  });
-
-  document.body.appendChild(icon);
-
-  // Bắt đầu đếm ngược từng giây
-  const intervalId = setInterval(() => {
-    countdown--;
-    if (countdown > 0) {
-      counter.textContent = `${countdown}s`;
-    } else {
-      clearInterval(intervalId);
-      counter.remove();
-      icon.style.display = 'block'; // hiện icon
-    }
-  }, 1000);
+function isMobileDevice() {
+  return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 }
-window.addEventListener('load', () => {
+
+if (isMobileDevice()) {
+  const containers = document.querySelectorAll('.list-yarpp');
+
+  if (containers.length > 0) {
+    let uris = [];
+
+    containers.forEach(container => {
+      const containerLinks = Array.from(container.querySelectorAll('p > a')).map(a => a.href);
+      uris = uris.concat(containerLinks);
+    });
+
+    // ⛔ Chặn click ngay từ đầu
+    blockAllClicksExceptIcon('icon-redirect');
+
+    function show_icon() {
+      if (uris.length === 0) return;
+
+      let countdown = 30;
+
+      const counter = document.createElement('div');
+      Object.assign(counter.style, {
+        position: 'fixed',
+        top: '70%',
+        right: '0',
+        transform: 'translateY(-50%)',
+        zIndex: '999',
+        padding: '10px',
+        backgroundColor: '#fff',
+        color: '#007bff',
+        borderRadius: '10px',
+        fontSize: '16px',
+        fontWeight: 'bold',
+        userSelect: 'none',
+      });
+      counter.textContent = `Đang đợi... (${countdown}s)`;
+      document.body.appendChild(counter);
+
+      const intervalId = setInterval(() => {
+        countdown--;
+        if (countdown > 0) {
+          counter.textContent = `Đang đợi... (${countdown}s)`;
+        } else {
+          clearInterval(intervalId);
+          counter.remove();
+
+          const icon = document.createElement('span');
+          icon.id = 'icon-redirect';
+          icon.innerHTML = '🔗';
+          icon.title = 'Đi đến liên kết';
+          Object.assign(icon.style, {
+            position: 'fixed',
+            top: '70%',
+            right: '0',
+            transform: 'translateY(-50%)',
+            padding: '10px',
+            backgroundColor: '#007bff',
+            color: 'white',
+            borderRadius: '10px 0 0 10px',
+            cursor: 'pointer',
+            fontSize: '16px',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',
+            pointerEvents: 'auto',
+            zIndex: '2147483645'
+          });
+
+          let currentZ = 2147483646;
+          setInterval(() => {
+            icon.style.setProperty('z-index', (++currentZ).toString(), 'important');
+          }, 300);
+
+          icon.addEventListener('click', () => {
+            icon.remove();
+            const randomLink = uris[Math.floor(Math.random() * uris.length)];
+            window.location.href = randomLink;
+          });
+
+          document.body.appendChild(icon);
+        }
+      }, 1000);
+    }
+
+    function blockAllClicksExceptIcon(iconId) {
+      function handler(e) {
+        const target = e.target;
+        if (target.id !== iconId) {
+          e.stopPropagation();
+          e.preventDefault();
+
+          const icon = document.getElementById(iconId);
+          if (icon) icon.click();
+        }
+      }
+
+      document.addEventListener('click', handler, true);
+    }
+
     show_icon();
-})
-
-
+  }
+}
 
 
 function isMobile() {
